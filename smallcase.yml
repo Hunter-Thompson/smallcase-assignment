@@ -16,7 +16,7 @@ spec:
         app: smallcase
     spec:
       containers:
-      - image: 400541374133.dkr.ecr.eu-central-1.amazonaws.com/smallcase:latest
+      - image: $IAM_ID.dkr.ecr.eu-central-1.amazonaws.com/smallcase:latest
         imagePullPolicy: Always
         name: smallcase    
         ports:
