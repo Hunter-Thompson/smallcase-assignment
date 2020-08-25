@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smallcase
+  labels:
+    app: smallcase
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smallcase 
+  template:
+    metadata:
+      labels:
+        app: smallcase
+    spec:
+      containers:
+      - image: 400541374133.dkr.ecr.eu-central-1.amazonaws.com/smallcase:latest
+        imagePullPolicy: Always
+        name: smallcase    
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+      nodeSelector:
+        label: smallcase
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "smallcase-alb"
+  namespace: "default"
+spec:
+  ports:
+    - port: 80
+      targetPort: 5000
+      protocol: TCP
+  type: NodePort
+  selector:
+    app: "smallcase"

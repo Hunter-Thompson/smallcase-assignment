@@ -122,7 +122,7 @@ module "eks" {
 
       instance_type = "t2.micro"
       k8s_labels = {
-        Label = "helloworld"
+        Label = "smallcase"
       }
       subnets          = module.vpc.private_subnets
       key_name	       = var.key_name
