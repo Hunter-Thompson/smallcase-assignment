@@ -1,0 +1,53 @@
+image: docker:19.03.1
+
+
+
+variables:
+  # When using dind service we need to instruct docker, to talk with the
+  # daemon started inside of the service. The daemon is available with
+  # a network connection instead of the default /var/run/docker.sock socket.
+  #
+  # The 'docker' hostname is the alias of the service container as described at
+  # https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#accessing-the-services
+  #
+  # Note that if you're using GitLab Runner 12.7 or earlier with the Kubernetes executor and Kubernetes 1.6 or earlier,
+  # the variable must be set to tcp://localhost:2375 because of how the
+  # Kubernetes executor connects services to the job container
+  # DOCKER_HOST: tcp://localhost:2375
+  #
+  DOCKER_HOST: tcp://localhost:2375
+  #
+  # This will instruct Docker not to start over TLS.
+  DOCKER_TLS_CERTDIR: ""
+
+  REGION: "eu-central-1"
+  IAM_ID: ""
+
+services:
+  - docker:19.03.1-dind
+
+before_script:
+  - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $IAM_ID.dkr.ecr.$REGION.amazonaws.com
+
+
+build: 
+  tags:
+    - Devops
+  stage: build
+  script: 
+    - docker build -t smallcase:$CI_COMMIT_SHORT_SHA .
+    - docker tag smallcase:$CI_COMMIT_SHORT_SHA $IAM_ID.dkr.ecr.$REGION.amazonaws.com/smallcase:$CI_COMMIT_SHORT_SHA
+
+deploy-image:
+  tags:
+    - Devops
+  stage: deploy
+  script:
+    - docker push $IAM_ID.dkr.ecr.$REGION.amazonaws.com/smallcase:$CI_COMMIT_SHORT_SHA
+
+rollout-changes:
+  tags:
+    - Devops
+  stage: deploy
+  script:
+    - kubectl set image deployment/smallcase smallcase=smallcase:CI_COMMIT_SHORT_SHA
