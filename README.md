@@ -8,6 +8,8 @@ cd Terraform && terraform init && yes yes | terraform apply
 
 With this we created a VPC with a private and public subnet for each availibity zone, public and private routes to route outside or inside, an internet gateway and a NAT gateway. Also a security group which gives remote SSH access to our worker nodes from within the VPC.
 
+We also created everything reuired for a Kubernetes cluster on AWS to run perfectly. From IAM roles, to VPC, to Keypairs, to Security groups.
+
 ## Second we create our Kubernetes deployment.
 
 ```sh
