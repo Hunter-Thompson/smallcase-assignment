@@ -16,14 +16,13 @@ spec:
         app: smallcase
     spec:
       containers:
-      - image: $IAM_ID.dkr.ecr.eu-central-1.amazonaws.com/smallcase:latest
+      - image: $IAM_ID.dkr.ecr.ap-south-1.amazonaws.com/smallcase:latest
         imagePullPolicy: Always
         name: smallcase    
         ports:
         - containerPort: 5000
           protocol: TCP
-      nodeSelector:
-        label: smallcase
+
 ---
 apiVersion: v1
 kind: Service
@@ -38,3 +37,24 @@ spec:
   type: NodePort
   selector:
     app: "smallcase"
+
+--- 
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "smallcase-alb"
+  namespace: "default"
+  labels:
+    app: smallcase
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: "smallcase-alb"
+              servicePort: 80

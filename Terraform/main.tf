@@ -38,6 +38,7 @@ data "aws_eks_cluster_auth" "cluster" {
 }
 
 provider "kubernetes" {
+  alias = "eks"
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster.token
@@ -102,6 +103,8 @@ module "eks" {
   cluster_name    = local.cluster_name
   cluster_version = "1.17"
   subnets         = module.vpc.private_subnets
+  enable_irsa  = true
+
 
   tags = {
     Environment = "test"
@@ -116,9 +119,9 @@ module "eks" {
 
   node_groups = {
     example = {
-      desired_capacity = 1
-      max_capacity     = 1
-      min_capacity     = 1
+      desired_capacity = 2
+      max_capacity     = 2
+      min_capacity     = 2
 
       instance_type = "t2.micro"
       k8s_labels = {
@@ -131,4 +134,36 @@ module "eks" {
     }
     }
 
+}
+
+
+
+
+
+
+#########################333
+
+
+locals {
+   # Your AWS EKS Cluster ID goes here.
+  k8s_cluster_name = module.eks.cluster_id #
+}
+
+data "aws_region" "current" {}
+
+
+module "alb_ingress_controller" {
+  source  = "iplabs/alb-ingress-controller/kubernetes"
+  version = "3.4.0"
+
+  providers = {
+    kubernetes = kubernetes.eks
+  }
+
+  k8s_cluster_type = "eks"
+  k8s_namespace    = "kube-system"
+
+  aws_region_name  = data.aws_region.current.name
+  k8s_cluster_name = data.aws_eks_cluster.cluster.name
+  depends_on       = [module.eks.node_groups]
 }
