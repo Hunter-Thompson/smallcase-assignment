@@ -25,4 +25,3 @@ kubectl apply -f smallcase.yml
 - Create a bash script which automates everything above.
 - Gitlab Runner configuration.
 - Add comments in code and extra documentation in README on how I went about things.
-- Integrate AWS ALB for Kubernetes, so that we can create the ALB directly from the yaml file.
