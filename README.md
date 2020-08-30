@@ -35,11 +35,14 @@ export AWS_SECRET_KEY=
 ```
 
 
-- Finally run `run.sh`.
+- Run `run.sh`.
 
 ```sh
 ./run.sh
 ```
+
+- Finally upload the code to the Gitlab Repo so that a CI/CD job can start and push the image to our Repo and fix the deployment.
+
 
 ## To clean up, run `clean.sh`
 ```sh
