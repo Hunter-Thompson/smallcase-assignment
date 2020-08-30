@@ -52,7 +52,7 @@ export AWS_SECRET_KEY=
 3) It creates the kubernetes deployment
 4) It outputs the loadbalancer DNS name.
 
-## A small paragraph on how it all works.
+## A small description on how it all works.
 
 Packer creates the AMI for the Gitlab runner, the AMI has Docker, AWSCLI, Kubectl and Gitlab runner installed.
 
