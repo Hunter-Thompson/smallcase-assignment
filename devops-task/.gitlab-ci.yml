@@ -4,7 +4,6 @@ variables:
 
 before_script:
   - aws eks update-kubeconfig --name smallcase-dev --region $REGION 
-  - echo $IAM_ID $REGION 
   - aws ecr get-login-password --region "$REGION" | docker login -u AWS --password-stdin "$IAM_ID.dkr.ecr.$REGION.amazonaws.com"
 
 
