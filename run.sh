@@ -7,6 +7,7 @@ cd Packer \
 && yes yes | terraform init \
 && yes yes | terraform apply -var personal_ami=$AMI_ID \ 
 && cd .. \
+&& aws eks update-kubeconfig --name smallcase-dev --region ap-south-1 \
 && kubectl apply -f smallcase.yml \
 && echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" \
 && echo "sleeping for 30sec" \

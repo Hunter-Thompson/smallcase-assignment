@@ -6,6 +6,27 @@
 - The default region Terraform and Packer creates the resources in is AP-SOUTH-1, MUMBAI.
 - The deployment will fail the first time because we havent uploaded smallcase:latest yet to our AWS ECR repo. It will only run successfully after the CI completes its job.
 
+## Dependencies
+
+- Terraform
+
+```sh
+v0.13.0
+```
+- Packer
+
+```sh
+v1.6.1
+```
+- Kubectl 
+
+- AWSCLI
+
+```sh
+aws-cli/2.0.34
+```
+
+
 ## Requirements to fulfill before running `run.sh`
 
 - Create Gitlab repo
