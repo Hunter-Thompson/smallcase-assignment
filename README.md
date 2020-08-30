@@ -41,7 +41,13 @@ export AWS_SECRET_KEY=
 ./run.sh
 ```
 
+## To clean up, run `clean.sh`
+```sh
+./clean.sh
+```
+
 ### We can test automatic building and deployment by pushing changes to the application on the Gitlab Repo.
+
 
 -----------
 
