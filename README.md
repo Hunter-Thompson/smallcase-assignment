@@ -41,7 +41,7 @@ export AWS_SECRET_KEY=
 ./run.sh
 ```
 
-- Finally upload the code to the Gitlab Repo so that a CI/CD job can start and push the image to our Repo and fix the deployment.
+- Finally upload all the files in the folder `devops-task` to the Gitlab Repo so that a CI/CD job can start and push the image to our Repo and fix the deployment.
 
 
 ## To clean up, run `clean.sh`
