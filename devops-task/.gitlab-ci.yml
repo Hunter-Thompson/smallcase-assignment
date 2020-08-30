@@ -15,6 +15,9 @@ build:
     - aws ecr create-repository --repository-name smallcase || echo "REPO ALREADY EXISTS"
     - docker build -t $"smallcase:$CI_COMMIT_SHORT_SHA" .
     - docker tag "smallcase:$CI_COMMIT_SHORT_SHA" "$IAM_ID.dkr.ecr.$REGION.amazonaws.com/smallcase:$CI_COMMIT_SHORT_SHA"
+  only:
+    - master
+
 
 deploy-image:
   tags:
@@ -22,6 +25,8 @@ deploy-image:
   stage: deploy
   script:
     - docker push "$IAM_ID.dkr.ecr.$REGION.amazonaws.com/smallcase:$CI_COMMIT_SHORT_SHA"
+  only:
+    - master
 
 rollout-changes:
   tags:
@@ -29,3 +34,5 @@ rollout-changes:
   stage: deploy
   script:
     - kubectl set image deployment smallcase "smallcase=$IAM_ID.dkr.ecr.$REGION.amazonaws.com/smallcase:$CI_COMMIT_SHORT_SHA"
+  only:
+    - master
