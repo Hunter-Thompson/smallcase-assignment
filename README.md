@@ -67,7 +67,7 @@ Packer creates the AMI for the Gitlab runner, the AMI has Docker, AWSCLI, Kubect
 
 Terraform creates all the Infra in AWS, the Kubernetes cluster, VPC, Security groups, Subnets, Routes, etc.
 
-The kubernetes config file creates a deployment with the app, and then exposes it as a service so that the ALB can connect to it. We create the ALB in AWS from the kubernetes config itself, this makes life a lot simpler. We can also use external DNS to route example.com to the ALB if from the config if required.
+The kubernetes config file creates a deployment with the app, and then exposes it as a service so that the ALB can connect to it. We create the ALB in AWS from the kubernetes config itself, this makes life a lot simpler. We can also use external DNS to route example.com to the ALB from the config if required.
 
 For CI/CD, everytime we push code to master, the runner we created earlier gets notified of a job. It then runs all the commands listed in `devops-task/.gitlab-ci.yml`. Before every job we update the kubectl config to make sure that we have the right one, and also login to our AWS ECR repo.
 
