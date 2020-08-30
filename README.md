@@ -1,27 +1,55 @@
 # SMALLCASE ASSIGNMENT
 
-## First we create the Kubernetes cluster.
+## Some information to take note of
 
-```sh
-cd Terraform && terraform init && yes yes | terraform apply
+- The default ssh public key Terraform uses to create the keypair on AWS is ~/.ssh/id_rsa.pub
+- The default region Terraform and Packer creates the resources in is AP-SOUTH-1, MUMBAI.
+- The deployment will fail the first time because we havent uploaded smallcase:latest yet to our AWS ECR repo. It will only run successfully after the CI completes its job.
+
+## Requirements to fulfill before running `run.sh`
+
+- Create Gitlab repo
+- Add masked variables for the runner in CI/CD -> Variables. AWS_ACCESS_KEY, AWS_SECRET_KEY and IAM_ID. (PS: MAKE SURE TO LEAVE NO SPACES OR NEW LINES)
+- Get the register token required to setup a runner from CI/CD -> Runner.
+- Add that token in `Packer/gitlab.json` in the provisioners part.
+
+```json      
+{
+        "type": "shell",
+        "environment_vars": ["token=xccasdasdascascascasc"],
 ```
 
-With this we created a VPC with a private and public subnet for each availibity zone, public and private routes to route outside or inside, an internet gateway and a NAT gateway. Also a security group which gives remote SSH access to our worker nodes from within the VPC.
-
-We also created everything reuired for a Kubernetes cluster on AWS to run perfectly. From IAM roles, to VPC, to Keypairs, to Security groups.
-
-## Second we create our Kubernetes deployment.
+- Export your AWS credentials 
 
 ```sh
-kubectl apply -f smallcase.yml
+export AWS_ACCESS_KEY=
+export AWS_SECRET_KEY=
 ```
 
-### Third and last we upload the files from the folder devops-task to the Gitlab Repo which is allowed to run CI/CD jobs.
+- Replace $IAM_ID in the kube config smallcase.yml with your IAM_ID
+
+```yml
+      containers:
+      - image: 1231823123.dkr.ecr.ap-south-1.amazonaws.com/smallcase:latest
+        imagePullPolicy: Always
+```
+
+
+- Finally run `run.sh`.
+
+```sh
+./run.sh
+```
+
+## What does `run.sh` do?
+
+1) It first creates the ami for Gitlab CI.
+2) It creates the Infra required.
+3) It creates the kubernetes deployment
+4) It outputs the loadbalancer DNS name.
+
 
 ### We can test automatic building and deployment by pushing changes to the application on the Gitlab Repo.
 
-# TODO:
-
-- Create a bash script which automates everything above.
-- Gitlab Runner configuration.
-- Add comments in code and extra documentation in README on how I went about things.
+# TODO 
+- Add comments in the code.
