@@ -8,5 +8,7 @@ cd Packer \
 && yes yes | terraform apply -var personal_ami=$AMI_ID \ 
 && cd .. \
 && kubectl apply -f smallcase.yml \
-&& echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-&& kubectl get ingress
+&& echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" \
+&& echo "sleeping for 30sec" \
+&& sleep 30 \
+&& kubectl get ingress 
