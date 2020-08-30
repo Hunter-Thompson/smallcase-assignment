@@ -14,3 +14,7 @@ Example: ~/.ssh/id_rsa.pub
 DESCRIPTION
   default = "~/.ssh/id_rsa.pub"
 }
+
+variable "personal_ami" {
+  description = "AMI we created using Packer"
+}

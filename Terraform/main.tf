@@ -7,10 +7,6 @@ provider "aws" {
   region  = var.region
 }
 
-provider "random" {
-  version = "~> 2.1"
-}
-
 provider "local" {
   version = "~> 1.2"
 }
@@ -50,12 +46,7 @@ data "aws_availability_zones" "available" {
 }
 
 locals {
-  cluster_name = "test-eks-${random_string.suffix.result}"
-}
-
-resource "random_string" "suffix" {
-  length  = 8
-  special = false
+  cluster_name = "smallcase-dev"
 }
 
 resource "aws_security_group" "worker_group_mgmt_one" {
@@ -70,6 +61,13 @@ resource "aws_security_group" "worker_group_mgmt_one" {
     cidr_blocks = [
       "10.0.0.0/8",
     ]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -103,12 +101,8 @@ module "eks" {
   cluster_name    = local.cluster_name
   cluster_version = "1.17"
   subnets         = module.vpc.private_subnets
-  enable_irsa  = true
-
-
-  tags = {
-    Environment = "test"
-  }
+  enable_irsa     = true
+  manage_aws_auth = false
 
   vpc_id = module.vpc.vpc_id
 
@@ -141,7 +135,7 @@ module "eks" {
 
 
 
-#########################333
+#########################
 
 
 locals {
@@ -163,7 +157,10 @@ module "alb_ingress_controller" {
   k8s_cluster_type = "eks"
   k8s_namespace    = "kube-system"
 
+
   aws_region_name  = data.aws_region.current.name
   k8s_cluster_name = data.aws_eks_cluster.cluster.name
   depends_on       = [module.eks.node_groups]
 }
+
+
